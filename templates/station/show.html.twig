@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste station | {{ parent() }}{% endblock %}
+
+{% block body %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <h1 class="d-inline me-3">{{ title }}</h1> <i class="fas fa-edit"></i>
+    <h2 class="mt-5 mb-4">Filtrer par ligne de metro : </h2>
+    {% for val in lines %}
+        <button>
+            <a class="btn btn-primary btn-sm" href="{{ path('station_list', {'line': val.ligne}) }}">{{ 'Ligne ' ~ val.ligne }}</a>
+        </button>
+    {% endfor %}
+    <div class="row mt-5">
+        <div class="col-12 col-md-4">
+            {{ knp_pagination_render(pagination) }}
+            <ul class="genre-list ps-0 mt-2 mb-3">
+            {% for station in pagination %}
+                <li class="d-inline">
+                    <span>{{ station.nomlong }}</span>
+                    <label> - Ligne : </label><span>{{ station.ligne }}</span>
+                    {% if station.termetro != 0  %}
+                        <span> (Terminus) </span>
+                    {% else %}
+                        {% for value in transits %}
+                            {% if station.nomlong == value.nomlong %}
+                                {% if value.transit != '1' %}
+                                    <span> (Correspondances) </span>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
